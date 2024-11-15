@@ -10,11 +10,11 @@ float coloredBitmap(int w, int h, char* unit) {
     if (strcmp(unit, "bt") == 0) {
         convertedSize = (float)totalSizeBits; // Bits
     } else if (strcmp(unit, "ko") == 0) {
-        convertedSize = (float)totalSizeBits / 1024; // Kilobits
+        convertedSize = (float)totalSizeBits / (8 * 1024); // Kilobytes
     } else if (strcmp(unit, "mo") == 0) {
-        convertedSize = (float)totalSizeBits / (1024 * 1024); // Megabits
+        convertedSize = (float)totalSizeBits / (8 * 1024 * 1024); // Megabytes
     } else if (strcmp(unit, "go") == 0) {
-        convertedSize = (float)totalSizeBits / (1024 * 1024 * 1024); // Gigabits
+        convertedSize = (float)totalSizeBits / (8 * 1024 * 1024 * 1024); // Gigabytes
     }
 
     return convertedSize;
