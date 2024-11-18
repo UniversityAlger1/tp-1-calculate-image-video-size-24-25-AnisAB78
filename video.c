@@ -1,46 +1,35 @@
-#include "config/video.h"
 #include <string.h>
+#include "config/video.h"
 
 // Parameters:
 //   w: width of the image
 //   h: height of the image
 //   durationMovie: duration in seconds of the movie (colored image)
-//   durationCredits: duration in seconds of the credits (black-and-white image)
-//   fps: Frames Per Second of the video
-//   unit: Unit of the output value. It could be 'bt' bits, 'ko' kilobits, 'mo' megabits, 'go' gigabits
-// Return value:
-//   Total video size (based on the unit passed as a parameter)
+//   durationCredits: duration in seconds of credits (black/white image)
+//   unit: Unit of the output value. It could be 'bt' for bytes, 'ko' for kilobits, 'mo' for megabits, 'go' for gigabits
+// Return value
+//   colored video size (based on the unit passed parameter)
 float video(int w, int h, int durationMovie, int durationCredits, int fps, char* unit) {
-    // Constants for bit depths
-    const int bits_per_pixel_color = 24; // Color image (RGB)
-    const int bits_per_pixel_bw = 8;    // Black-and-white image
+    // Bits per pixel for colored image (24 bits)
+    int bitsPerPixel = 24;
 
-    // Calculate total number of frames for movie and credits
-    long long total_frames_movie = (long long)durationMovie * fps;
-    long long total_frames_credits = (long long)durationCredits * fps;
+    float clrImage = w * h * bitsPerPixel * durationMovie * fps;
+    float BImage = w * h * durationCredits * fps;
+    float sizeInBits = clrImage + BImage; // Add to total size in bits
 
-    // Calculate total bits for movie and credits
-    long long total_bits_movie = (long long)w * h * bits_per_pixel_color * total_frames_movie;
-    long long total_bits_credits = (long long)w * h * bits_per_pixel_bw * total_frames_credits;
 
-    // Total size in bits
-    long long total_bits = total_bits_movie + total_bits_credits;
 
-    // Convert to the requested unit
+    // Convert size based on the requested unit
     if (strcmp(unit, "bt") == 0) {
-        // Return size in bits
-        return (float)total_bits;
+        return sizeInBits / 8; // Convert to bytes
     } else if (strcmp(unit, "ko") == 0) {
-        // Convert bits to kilobits: 1 kilobit = 1024 bits
-        return (float)total_bits / 1024;
+        return sizeInBits / (1024 * 8); // Convert to kilobits
     } else if (strcmp(unit, "mo") == 0) {
-        // Convert bits to megabits: 1 megabit = 1024 * 1024 bits
-        return (float)total_bits / (1024 * 1024);
+        return sizeInBits / (1024 * 1024 * 8); // Convert to megabits
     } else if (strcmp(unit, "go") == 0) {
-        // Convert bits to gigabits: 1 gigabit = 1024 * 1024 * 1024 bits
-        return (float)total_bits / (1024 * 1024 * 1024);
+        return sizeInBits / (1024 * 1024 * 1024 * 8); // Convert to gigabits
     } else {
-        // Invalid unit
-        return -1;
+        // If the unit is not recognized, return -1 or some error value
+        return -1.0f;
     }
 }
