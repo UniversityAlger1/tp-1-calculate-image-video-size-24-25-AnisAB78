@@ -8,7 +8,7 @@
 //   durationMovie: duration in seconds of movie (colored section)
 //   durationCredits: duration in seconds of credits (black-and-white section)
 //   fps: Frames Per Second of the video
-//   unit: Unit of the output value. It could be 'bt' for bits, 'ko' for kilobits, 'mo' for megabits, 'go' for gigabits
+//   unit: Unit of the output value. It could be 'bt' for bits, 'ko' for kilobytes, 'mo' for megabytes, 'go' for gigabytes
 // Return value:
 //   size of the video in the specified unit
 float video(int w, int h, int durationMovie, int durationCredits, int fps, char* unit) {
@@ -21,24 +21,24 @@ float video(int w, int h, int durationMovie, int durationCredits, int fps, char*
     int bwFrames = durationCredits * fps;
 
     // Calculate the size in bits for each section
-    int colorSizeBits = colorFrames * w * h * colorBitsPerPixel;
-    int bwSizeBits = bwFrames * w * h * bwBitsPerPixel;
+    long long colorSizeBits = (long long)colorFrames * w * h * colorBitsPerPixel;
+    long long bwSizeBits = (long long)bwFrames * w * h * bwBitsPerPixel;
 
     // Total video size in bits
-    int totalSizeBits = colorSizeBits + bwSizeBits;
+    long long totalSizeBits = colorSizeBits + bwSizeBits;
 
     // Variable to hold the size in the specified unit
     float size;
 
     // Convert total size to the specified unit
     if (strcmp(unit, "bt") == 0) {
-        size = totalSizeBits; // Size in bits
+        size = (float)totalSizeBits; // Size in bits
     } else if (strcmp(unit, "ko") == 0) {
-        size = totalSizeBits / (1024.0 * 8); // Size in kilobits
+        size = totalSizeBits / (8.0 * 1024); // Size in kilobytes
     } else if (strcmp(unit, "mo") == 0) {
-        size = totalSizeBits / (1024.0 * 1024.0 * 8); // Size in megabits
+        size = totalSizeBits / (8.0 * 1024 * 1024); // Size in megabytes
     } else if (strcmp(unit, "go") == 0) {
-        size = totalSizeBits / (1024.0 * 1024.0 * 1024.0 * 8); // Size in gigabits
+        size = totalSizeBits / (8.0 * 1024 * 1024 * 1024); // Size in gigabytes
     } else {
         // If the unit is not recognized, print an error and return -1
         printf("Invalid unit specified.\n");
